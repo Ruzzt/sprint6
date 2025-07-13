@@ -20,7 +20,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка парсинга формы", http.StatusInternalServerError)
 		return
 	}
-	file, header, err := r.FormFile("file")
+	file, header, err := r.FormFile("myFile")
 	if err != nil {
 		http.Error(w, "Ошибка получения файла", http.StatusInternalServerError)
 		return
