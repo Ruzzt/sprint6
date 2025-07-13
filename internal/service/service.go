@@ -6,6 +6,15 @@ import (
 )
 
 var textToMorse = map[rune]string{
+	// Русские буквы
+	'А': ".-", 'Б': "-...", 'В': ".--", 'Г': "--.", 'Д': "-..",
+	'Е': ".", 'Ж': "...-", 'З': "--..", 'И': "..", 'Й': ".---",
+	'К': "-.-", 'Л': ".-..", 'М': "--", 'Н': "-.", 'О': "---",
+	'П': ".--.", 'Р': ".-.", 'С': "...", 'Т': "-", 'У': "..-",
+	'Ф': "..-.", 'Х': "....", 'Ц': "-.-.", 'Ч': "---.", 'Ш': "----",
+	'Щ': "--.-", 'Ъ': "--.--", 'Ы': "-.--", 'Ь': "-..-", 'Э': "..-..",
+	'Ю': "..--", 'Я': ".-.-",
+
 	'A': ".-", 'B': "-...", 'C': "-.-.", 'D': "-..",
 	'E': ".", 'F': "..-.", 'G': "--.", 'H': "....",
 	'I': "..", 'J': ".---", 'K': "-.-", 'L': ".-..",
@@ -13,6 +22,7 @@ var textToMorse = map[rune]string{
 	'Q': "--.-", 'R': ".-.", 'S': "...", 'T': "-",
 	'U': "..-", 'V': "...-", 'W': ".--", 'X': "-..-",
 	'Y': "-.--", 'Z': "--..",
+
 	'0': "-----", '1': ".----", '2': "..---", '3': "...--",
 	'4': "....-", '5': ".....", '6': "-....", '7': "--...",
 	'8': "---..", '9': "----.",
@@ -43,7 +53,7 @@ func Convert(input []byte) (string, error) {
 	}
 
 	if isMorse {
-
+		// Морзе в текст
 		words := strings.Split(str, " / ")
 		var result []string
 		for _, word := range words {
@@ -53,25 +63,25 @@ func Convert(input []byte) (string, error) {
 				if l == "" {
 					continue
 				}
-				if ch, ok := morseToText[l]; ok {
-					decodedWord.WriteRune(ch)
-				} else {
+				ch, ok := morseToText[l]
+				if !ok {
 					return "", errors.New("некорректный код Морзе: " + l)
 				}
+				decodedWord.WriteRune(ch)
 			}
 			result = append(result, decodedWord.String())
 		}
 		return strings.Join(result, " "), nil
 	} else {
-
+		// Текст в Морзе
 		var morse []string
 		upper := strings.ToUpper(str)
 		for _, c := range upper {
-			if code, ok := textToMorse[c]; ok {
-				morse = append(morse, code)
-			} else {
+			code, ok := textToMorse[c]
+			if !ok {
 				return "", errors.New("недопустимый символ в тексте: " + string(c))
 			}
+			morse = append(morse, code)
 		}
 		return strings.Join(morse, " "), nil
 	}
