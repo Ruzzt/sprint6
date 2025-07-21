@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"log"
+
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
@@ -17,19 +19,20 @@ func IndexFunc(w http.ResponseWriter, r *http.Request) {
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		http.Error(w, "Ошибка парсинга формы", http.StatusInternalServerError)
+		log.Println("Error parsing form:", err)
+		http.Error(w, "Ошибка парсинга формы", http.StatusBadRequest)
 		return
 	}
 	file, header, err := r.FormFile("myFile")
 	if err != nil {
-		http.Error(w, "Ошибка получения файла", http.StatusInternalServerError)
+		http.Error(w, "Ошибка получения файла", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
 
 	response, err := io.ReadAll(file)
 	if err != nil {
-		http.Error(w, "Ошибка чтения файла", http.StatusInternalServerError)
+		http.Error(w, "Ошибка чтения файла", http.StatusBadRequest)
 		return
 	}
 
